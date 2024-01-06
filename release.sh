@@ -1,19 +1,23 @@
 #!/bin/bash -e
+last_git_tag="$(git tag -l | head -n 1)"
 if [ "$1" == "" ]; then
-    echo "Usage: $0 x.y.z // to release vX.Y.Z"
+    echo "Usage: $0 vX.Y.Z // to release vX.Y.Z"
+    echo "Latest version: ${last_git_tag}"
     exit 1
 fi
 
-git_tag="v$1"
-read -p "going to publish version: ${git_tag} (y/n): " response
+new_git_tag="$1"
+
+read -p "going to publish version: ${new_git_tag}. Current version: ${last_git_tag} (y/n): " response
 if [ "${response}" != "y" ]; then
     echo "Interrupter."
     exit 0
 fi
 go mod tidy
-git commit -a -m "go mod tidy" || true
 go build ./...
 go test ./...
+git commit -a -m "go mod tidy" && git push || true
 
-git tag v0.1.0
-git push origin v0.1.0
+git tag ${new_git_tag}
+git push origin ${new_git_tag}
+GOPROXY=proxy.golang.org go list -m github.com/sild/gosk@${new_git_tag}
