@@ -11,7 +11,7 @@ if [ "${response}" != "y" ]; then
     exit 0
 fi
 go mod tidy
-git commit -a -m "go mod tidy"
+git commit -a -m "go mod tidy" || true
 go build ./...
 go test ./...
 
