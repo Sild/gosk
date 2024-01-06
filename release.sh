@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-last_git_tag="$(git tag -l | head -n 1)"
+last_git_tag="$(git tag --sort=-creatordate | head -n 1)"
 new_git_tag="$1"
 
 while [ "${new_git_tag}" == "" ]; do 

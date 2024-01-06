@@ -1,4 +1,4 @@
-module gosk
+module github.com/sild/gosk
 
 go 1.21.5
 

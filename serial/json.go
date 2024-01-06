@@ -2,8 +2,9 @@ package serial
 
 import (
 	"encoding/json"
-	"gosk/log"
 	"os"
+
+	"github.com/sild/gosk/log"
 )
 
 func JsonSToObj[T interface{}](data string) T {
