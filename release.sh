@@ -1,18 +1,21 @@
 #!/bin/bash -e
-last_git_tag="$(git tag -l | head -n 1)"
-if [ "$1" == "" ]; then
-    echo "Usage: $0 vX.Y.Z // to release vX.Y.Z"
-    echo "Latest version: ${last_git_tag}"
-    exit 1
-fi
 
+last_git_tag="$(git tag -l | head -n 1)"
 new_git_tag="$1"
 
-read -p "going to publish version: ${new_git_tag}. Current version: ${last_git_tag} (y/n): " response
+while [ "${new_git_tag}" == "" ]; do 
+    echo "Latest version: ${last_git_tag}"
+    read -p "Enter next version: " new_git_tag
+done
+
+
+read -p "Going to publish version: ${new_git_tag}. Current version: ${last_git_tag}. Continue? (y/n): " response
+
 if [ "${response}" != "y" ]; then
     echo "Interrupter."
     exit 0
 fi
+
 go mod tidy
 go build ./...
 go test ./...
