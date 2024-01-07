@@ -2,41 +2,52 @@ package log
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 )
 
+var (
+	logger = zerolog.New(zerolog.ConsoleWriter{
+		Out:        os.Stderr,
+		NoColor:    false,
+		TimeFormat: "2006-01-02T15:04:05.999",
+	}).With().Timestamp().Logger()
+)
+
+func init() {
+}
+
 func SetLevel(level zerolog.Level) {
-	zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	logger = logger.Level(zerolog.DebugLevel)
 }
 
 func Trace(tpl string, args ...interface{}) {
-	logImpl(log.Trace(), tpl, args...)
+	logImpl(logger.Trace(), tpl, args...)
 }
 
 func Debug(tpl string, args ...interface{}) {
-	logImpl(log.Debug(), tpl, args...)
+	logImpl(logger.Debug(), tpl, args...)
 }
 
 func Info(tpl string, args ...interface{}) {
-	logImpl(log.Info(), tpl, args...)
+	logImpl(logger.Info(), tpl, args...)
 }
 
 func Warn(tpl string, args ...interface{}) {
-	logImpl(log.Warn(), tpl, args...)
+	logImpl(logger.Warn(), tpl, args...)
 }
 
 func Error(tpl string, args ...interface{}) {
-	logImpl(log.Error(), tpl, args...)
+	logImpl(logger.Error(), tpl, args...)
 }
 
-func Fatal(tpl string, args ...interface{}) {
-	logImpl(log.Fatal(), tpl, args...)
+func Panic(tpl string, args ...interface{}) {
+	logImpl(logger.Panic(), tpl, args...)
 }
 
 func GetImpl() zerolog.Logger {
-	return log.Logger
+	return logger
 }
 
 func logImpl(impl *zerolog.Event, tpl string, args ...interface{}) {
